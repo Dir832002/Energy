@@ -167,8 +167,6 @@ if page == "Map - Cluster":
         cluster = st.selectbox('Cluster', ('TotalGHGEmissions', 'SiteEnergyUse(kBtu)' , 'Electricity(kBtu)'))
 
 
-    st.subheader("L'emplacement des bâtiments de type : "+ categorie + " (Heatmap : "  + cluster +")" )
-
     df_geo = pd.DataFrame(df_15_16)
 
     df_geo['energy_grad'] = ''
