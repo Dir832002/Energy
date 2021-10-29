@@ -314,6 +314,7 @@ if page == "Map - Cluster":
 
     repere_geo(df_geo, mapa)
     with col40:
+        st.subheader("L'emplacement des bâtiments de type : " + categorie)
         folium_static(mapa, width=830, height=600)
     # Fin Map Mapa----------------------------------------------------------------------------------------------------------------
 
@@ -323,7 +324,7 @@ if page == "Map - Cluster":
     col20, col21, col22 = st.columns([1/3, 1/3, 1/3])
     with col20:
         cluster2 = st.selectbox('Cluster Map', ('TotalGHGEmissions', 'SiteEnergyUse(kBtu)', 'Electricity(kBtu)',
-                                                'PropertyGFATotal', 'PropertyGFAParking','SiteEUI(kBtu/sf)'))
+                                                'PropertyGFATotal', 'PropertyGFAParking'))
 
     st.subheader('Map Cluster : ' + cluster2)
 
@@ -405,10 +406,12 @@ if page == "Analyse Exploratoire":
             Energy_2 = st.selectbox('Variable_Y', colonnes)
 
         with col36:
-            colors = ['#83c000', 'darkgreen', 'yellow', 'orange', 'red','lightblue']
+            colors = ['lightblue', 'red', 'orange', 'yellow', 'darkgreen', '#83c000']
             sns.set_palette(sns.color_palette(colors))
 
-            fig = sns.jointplot(x=Energy_1, y=Energy_2, data=df_15_16, hue='energy_grad', height=11, ratio=8,dropna=True)
+            fig = sns.jointplot(x=Energy_1, y=Energy_2, data=df_15_16.sort_values(by=['energy_grad'], ascending=False),
+                                hue='energy_grad', height=11, ratio=8,dropna=True, alpha=1)
+
 
             st.pyplot(fig)
 
@@ -524,4 +527,3 @@ if page == "Analyse Exploratoire":
 
             st.pyplot(fig)
 #Fin Graphique Boxplot-------------------------------------------------------------------------------------------------------
-
