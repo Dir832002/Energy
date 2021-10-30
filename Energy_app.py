@@ -21,7 +21,7 @@ st.set_page_config(
     page_title="Seattle Energy",
     layout="wide",
     initial_sidebar_state="expanded",
-    page_icon = 'images/seattle.png',
+    page_icon = 'images/energy.png',
 )
 
 
