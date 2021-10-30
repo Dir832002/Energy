@@ -24,6 +24,11 @@ st.set_page_config(
     page_icon = 'images/energy.png',
 )
 
+st.markdown(""" <style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+</style> """, unsafe_allow_html=True)
+
 
 col17, col18, col19 = st.columns([4 , 8 , 4 ])
 
