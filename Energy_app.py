@@ -21,7 +21,9 @@ st.set_page_config(
     page_title="Seattle Energy",
     layout="wide",
     initial_sidebar_state="expanded",
+    page_icon = 'images/seattle.png',
 )
+
 
 col17, col18, col19 = st.columns([4 , 8 , 4 ])
 
