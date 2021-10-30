@@ -24,11 +24,68 @@ st.set_page_config(
     page_icon = 'images/energy.png',
 )
 
+st.write("""
+<style>
 
-st.markdown(""" <style>
+#image {
+text-align: center;
+visibility: visible;
+display: block;
+position: relative;
+background-color: #A7A2A2;
+padding: 1px;
+top: 2px;
+color:#A7A2A2;
+background-size: cover;
+}
+
+table {
+font-size:13px !important;
+border:3px solid #6495ed;
+border-collapse:collapse;
+/*margin:auto;*/
+}
+
+th {
+font-family:monospace bold;
+border:1px dotted #6495ed;
+background-color:#EFF6FF;
+text-align:center;
+}
+td {
+font-family:sans-serif;
+font-size:95%;
+border:1px solid #6495ed;
+text-align:left;
+width:auto;
+}
+
+.url {
+transition: transform .2s; /* Animation */
+margin: 0 auto;
+}
+
+.url:hover {
+  transform: scale(3); /* (300% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+
 #MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-</style> """, unsafe_allow_html=True)
+footer {
+visibility: hidden;
+}
+footer:after {
+content:'TRABIS Application'; 
+text-align: center;
+visibility: visible;
+display: block;
+position: relative;
+background-color: #F3EEEE;
+padding: 5px;
+top: 2px;
+color:#A7A2A2;
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 col17, col18, col19 = st.columns([4 , 8 , 4 ])
@@ -37,7 +94,8 @@ with col18:
     image = Image.open("images/seattle.png")
     st.image(image, '')
 
-st.write("------------------------------------------------------------------------------------------------------")
+st.markdown("""<div id=image></div>""", unsafe_allow_html=True)
+
 
 # Create a page dropdown
 page = st.sidebar.radio("Choisissez votre Application",
@@ -90,43 +148,6 @@ if page == "Prédiction Energie":
     donnee_entree = pd.concat([input_df, df_15_16[columns]])
 
     donnee_entree = donnee_entree[:1]
-
-    st.write("""
-    <style>
-
-    table {
-    font-size:13px !important;
-    border:3px solid #6495ed;
-    border-collapse:collapse;
-    /*margin:auto;*/
-    }
-
-    th {
-    font-family:monospace bold;
-    border:1px dotted #6495ed;
-    background-color:#EFF6FF;
-    text-align:center;
-    }
-    td {
-    font-family:sans-serif;
-    font-size:95%;
-    border:1px solid #6495ed;
-    text-align:left;
-    width:auto;
-    }
-
-    .url {
-      transition: transform .2s; /* Animation */
-      margin: 0 auto;
-    }
-
-    .url:hover {
-      transform: scale(3); /* (300% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
-    }
-
-    </style>
-    </style>
-    """, unsafe_allow_html=True)
 
     df_encoder = pd.DataFrame(donnee_entree)
 
@@ -299,11 +320,11 @@ if page == "Map - Cluster":
     repere_geo(df_geo_cat, mapa)
     with col40:
         st.subheader("L'emplacement des bâtiments de type : " + categorie)
-        folium_static(mapa, width=750, height=600)
+        folium_static(mapa, width=830, height=600)
     # Fin Map Mapa----------------------------------------------------------------------------------------------------------------
 
     # Map cluster-------------------------------------------------------------------------------------------------------
-    st.write('_________________________________________________________________________________________________________')
+    st.markdown("""<div id=image></div>""", unsafe_allow_html=True)
 
     col20, col21, col22 = st.columns([1/3, 1/3, 1/3])
     with col20:
@@ -357,7 +378,7 @@ if page == "Map - Cluster":
     repere_geo(df_geo, marker_cluster)
 
     #Display Map
-    folium_static(mapa2, width=800, height=600)
+    folium_static(mapa2, width=1000, height=600)
 # End Map cluster-------------------------------------------------------------------------------------------------------
 
 #Graphique Joinplot-------------------------------------------------------------------------------------------------------
@@ -423,7 +444,8 @@ if page == "Analyse Exploratoire":
         plt.yticks(fontsize=10)
 
         st.pyplot(fig3)
-        st.write('------------------------------------------------------------------------------------------------------')
+
+        st.markdown("""<div id=image></div>""", unsafe_allow_html=True)
 
         col27, col28, col29 = st.columns([1 / 3, 10 / 6, 1 / 3])
         with col28:
