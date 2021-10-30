@@ -293,7 +293,7 @@ if page == "Map - Cluster":
     repere_geo(df_geo_cat, mapa)
     with col40:
         st.subheader("L'emplacement des bâtiments de type : " + categorie)
-        folium_static(mapa, width=830, height=600)
+        folium_static(mapa, width=800, height=600)
     # Fin Map Mapa----------------------------------------------------------------------------------------------------------------
 
     # Map cluster-------------------------------------------------------------------------------------------------------
@@ -351,7 +351,7 @@ if page == "Map - Cluster":
     repere_geo(df_geo, marker_cluster)
 
     #Display Map
-    folium_static(mapa2, width=1000, height=600)
+    folium_static(mapa2, width=800, height=600)
 # End Map cluster-------------------------------------------------------------------------------------------------------
 
 #Graphique Joinplot-------------------------------------------------------------------------------------------------------
