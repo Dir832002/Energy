@@ -164,26 +164,11 @@ if page == "Map - Cluster":
     col39, col40 = st.columns([2, 8])
 
     with col39:
+        #Select box
         categorie = st.selectbox('Type du Batiment', ('Hotel', 'Other', 'Store', 'Education', 'Office',
                                                       'Warehouse', 'Residence', 'Health', 'Restaurant', 'All'))
         cluster = st.selectbox('Cluster', ('TotalGHGEmissions', 'SiteEnergyUse(kBtu)' , 'Electricity(kBtu)'))
 
-
-    df_geo = pd.DataFrame(df_15_16)
-
-    df_geo['energy_grad'] = ''
-
-
-    def energy_grad(df):
-
-        df.loc[df.eval("ENERGYSTARScore <= 20"), "energy_grad"] = "D"
-        df.loc[df.eval("ENERGYSTARScore > 20"), "energy_grad"] = "C"
-        df.loc[df.eval("ENERGYSTARScore > 40"), "energy_grad"] = "B"
-        df.loc[df.eval("ENERGYSTARScore > 60"), "energy_grad"] = "A"
-        df.loc[df.eval("ENERGYSTARScore > 80"), "energy_grad"] = "A+"
-
-
-    energy_grad(df_geo)
 
 
     def couleur(val):
@@ -244,25 +229,26 @@ if page == "Map - Cluster":
     df_geo = df_geo.sort_values(by=['OSEBuildingID', 'DataYear'], ascending=False)
     df_geo.drop_duplicates(subset="OSEBuildingID", keep='first', inplace=True)
 
+    #Créer DataFrame par catégorier sélectionner
+    df_geo_cat = pd.DataFrame(df_geo)
+
     if categorie != 'All':
-        df_geo = df_geo[df_geo['PrimaryPropertyType'] == categorie]
+        df_geo_cat = df_geo[df_geo['PrimaryPropertyType'] == categorie]
     else:
-        df_geo = pd.DataFrame(df_15_16[colonne_geo])
-        df_geo['full_address'] = df_geo.Address + "," + df_geo.City + "," + df_geo.State
-        df_geo = df_geo.sort_values(by=['OSEBuildingID', 'DataYear'], ascending=False)
-        df_geo.drop_duplicates(subset="OSEBuildingID", keep='first', inplace=True)
+        df_geo_cat = pd.DataFrame(df_geo)
 
     mapa = folium.Map(location=(47.62322, -122.320277), zoom_start=11, control_scale=True, prefer_canvas=True)
 
 
     # Ajout de plugins---------------------------------------------
+    from folium.plugins import HeatMap
+    from folium.plugins import MeasureControl
 
     # Barre color map
-    # colormap = folium.branca.colormap.linear.YlOrRd_09.scale(0, 8500)
-    # colormap = colormap.to_step(index=[0, 1000, 3000, 5000, 8500])
-    colormap = folium.branca.colormap.LinearColormap(colors=['blue', 'green', 'orange', 'red'],
-                                                     vmin=df_geo[cluster].min(),
-                                                     vmax=df_geo[cluster].max())
+    #colormap = folium.branca.colormap.linear.YlOrRd_09.scale(0, 8500)
+    colormap = folium.branca.colormap.LinearColormap(colors=['blue', 'darkgreen', 'green', 'orange', 'red'],
+                                                     vmin=df_geo_cat[cluster].min(),
+                                                     vmax=df_geo_cat[cluster].max())
 
     colormap.caption = cluster
     colormap.add_to(mapa)
@@ -272,9 +258,9 @@ if page == "Map - Cluster":
 
     plugins.Fullscreen(
         position="topright",
-        title="Expand me",
-        title_cancel="Exit me",
-        force_separate_button=True,
+        title="Expand map",
+        title_cancel="Exit map",
+        force_separate_button=False,
     ).add_to(mapa)
 
     minimap = plugins.MiniMap()
@@ -284,35 +270,27 @@ if page == "Map - Cluster":
     plugins.HeatMap(data).add_to(mapa)
 
     # Adds tool to the top right
-    from folium.plugins import MeasureControl
 
     mapa.add_child(MeasureControl())
 
-    # List comprehension to make out list of lists
-    # Plot it on the map
-    from folium.plugins import HeatMap
-
-    # List comprehension to make out list of lists
-
-    # df_geo['ENERGYSTARScore'].fillna(value = 0, inplace=True)
     # create heatmap layer
-    heatmap = HeatMap(list(zip(df_geo['Latitude'], df_geo['Longitude'], df_geo[cluster])),
+    heatmap = HeatMap(list(zip(df_geo_cat['Latitude'], df_geo_cat['Longitude'], df_geo_cat[cluster])),
                       min_opacity=0.2,
-                      max_val=df_geo[cluster].max(),
+                      max_val=df_geo_cat[cluster].max(),
                       radius=40,
-                      # blur=40,
-                      gradient={'0': 'blue', '0.25': 'green', '0.5': 'green', '0.75': 'orange', '1': 'Red'},
+                      #blur=40,
+                      gradient={'0': 'blue', '0.25': 'darkgreen', '0.5': 'green', '0.75': 'orange', '1': 'Red'},
                       max_zoom=10,
                       )
 
     # Create a layer control object and add it to our map instance
-    #folium.LayerControl().add_to(mapa)
+    #plugins.folium.LayerControl().add_to(mapa)
 
     # add heatmap layer to base map
     heatmap.add_to(mapa)
     # Fin plugins---------------------------------------------------
 
-    repere_geo(df_geo, mapa)
+    repere_geo(df_geo_cat, mapa)
     with col40:
         st.subheader("L'emplacement des bâtiments de type : " + categorie)
         folium_static(mapa, width=830, height=600)
@@ -328,27 +306,21 @@ if page == "Map - Cluster":
 
     st.subheader('Map Cluster : ' + cluster2)
 
-    df_geo2 = pd.DataFrame(df_15_16[colonne_geo])
-    df_geo2['full_address'] = df_geo2.Address + "," + df_geo2.City + "," + df_geo2.State
-    df_geo2 = df_geo2.sort_values(by=['OSEBuildingID', 'DataYear'], ascending=False)
-    df_geo2.drop_duplicates(subset="OSEBuildingID", keep='first', inplace=True)
-
     mapa2 = folium.Map(location=(47.62322, -122.320277), zoom_start=11, control_scale=True, prefer_canvas=True)
 
     marker_cluster = plugins.MarkerCluster().add_to(mapa2)
 
-
-    colormap = folium.branca.colormap.LinearColormap(colors=['blue', 'green', 'orange', 'red'],
-                                                     vmin=df_geo2[cluster2].min(),
-                                                     vmax=df_geo2[cluster2].max())
+    colormap = folium.branca.colormap.LinearColormap(colors=['blue', 'darkgreen', 'green', 'orange', 'red'],
+                                                     vmin=df_geo[cluster2].min(),
+                                                     vmax=df_geo[cluster2].max())
     colormap.caption = cluster2
     colormap.add_to(mapa2)
 
     plugins.Fullscreen(
         position="topright",
-        title="Expand me",
-        title_cancel="Exit me",
-        force_separate_button=True,
+        title="Expand map",
+        title_cancel="Exit map",
+        force_separate_button=False,
     ).add_to(mapa2)
 
     # Add Mini Map
@@ -362,20 +334,23 @@ if page == "Map - Cluster":
     #plugins.MarkerCluster(points).add_to(mapa2)
 
     # Heatmap
-    heatmap2 = HeatMap(list(zip(df_geo2['Latitude'], df_geo2['Longitude'], df_geo2[cluster2])),
+    heatmap2 = HeatMap(list(zip(df_geo['Latitude'], df_geo['Longitude'], df_geo[cluster2])),
                        min_opacity=0.2,
-                       max_val=df_geo2[cluster2].max(),
+                       max_val=df_geo[cluster2].max(),
                        radius=40,
                        # blur=40,
-                       gradient={'0': 'blue', '0.25': 'green', '0.5': 'green', '0.75': 'orange', '1': 'Red'},
+                       gradient={'0': 'blue', '0.25': 'darkgreen', '0.5': 'green', '0.75': 'orange', '1': 'Red'},
                        max_zoom=10,
                        )
+
     # add heatmap layer to base map
     heatmap2.add_to(mapa2)
+
     # Fin plugins---------------------------------------------------
 
-    repere_geo(df_geo2, marker_cluster)
+    repere_geo(df_geo, marker_cluster)
 
+    #Display Map
     folium_static(mapa2, width=1000, height=600)
 # End Map cluster-------------------------------------------------------------------------------------------------------
 
