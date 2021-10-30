@@ -24,6 +24,7 @@ st.set_page_config(
     page_icon = 'images/energy.png',
 )
 
+
 st.markdown(""" <style>
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
