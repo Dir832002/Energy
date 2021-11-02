@@ -27,6 +27,7 @@ st.set_page_config(
 st.write("""
 <style>
 
+
 #image {
 text-align: center;
 visibility: visible;
