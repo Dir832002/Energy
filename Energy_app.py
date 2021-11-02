@@ -234,10 +234,12 @@ if page == "Map - Cluster":
         for index, row in df.iterrows():
             popup = (df['PrimaryPropertyType'][index] + ' : </br>' +
                      df['PropertyName'][index]) + '</br>' + '_____________________________' + '</br>' + \
-                    'Address :' + '</br>' + (
-                        df['full_address'][index]) + '</br>' + '_____________________________' + '</br>' + \
-                    'ENERGY STAR Score : ' + '</br>' + str(df['ENERGYSTARScore'][index]) + '</br>' + '_____________________________' + '</br>' + \
-                    'Site Energy Use : ' + '</br>' + str('{0:,}'.format(df['SiteEnergyUse(kBtu)'][index]))
+                     'Address :' + '</br>' + (
+                     df['full_address'][index]) + '</br>' + '_____________________________' + '</br>' + \
+                     'ENERGY STAR Score : ' + '</br>' + str(
+                     df['ENERGYSTARScore'][index]) + '</br>' + '_____________________________' + '</br>' + \
+                     'Energy Use : ' + str('{0:,}'.format(df['SiteEnergyUse(kBtu)'][index].astype(int))) + '</br>' + \
+                     'Emissions CO2 : ' + str('{0:,}'.format(df['TotalGHGEmissions'][index]))
 
             folium.Marker(location=(row['Latitude'], row['Longitude']),
                           icon=folium.Icon(color=couleur(df['energy_grad'][index]),
