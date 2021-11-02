@@ -175,6 +175,7 @@ if page == "Prédiction Energie":
 
     st.subheader('')
     st.subheader('Résultat de la prévision')
+    
     prevision = pd.DataFrame(prevision)
 
     prevision = prevision
