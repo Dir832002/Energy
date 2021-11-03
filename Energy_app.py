@@ -498,9 +498,8 @@ if page == "Analyse Exploratoire":
     col41, col42, col43 = st.columns([1 / 3, 10 / 6, 1 / 3])
     with col42:
         col_neigh = ['All', 'DOWNTOWN', 'SOUTHEAST', 'NORTHEAST', 'EAST', 'CENTRAL', 'NORTH',
-                      'MAGNOLIA / QUEEN ANNE', 'LAKE UNION', 'GREATER DUWAMISH',
-                      'BALLARD', 'NORTHWEST', 'SOUTHWEST', 'DELRIDGE', 'Central',
-                      'Ballard', 'North', 'Delridge', 'Northwest', 'DELRIDGE NEIGHBORHOODS']
+                     'MAGNOLIA / QUEEN ANNE', 'LAKE UNION', 'GREATER DUWAMISH',
+                     'BALLARD', 'NORTHWEST', 'SOUTHWEST', 'DELRIDGE']
 
         categorie_neigh = st.selectbox('Sélectionner le quartier', col_neigh)
 
