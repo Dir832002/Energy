@@ -206,7 +206,7 @@ if page == "Map - Cluster":
             return 'green'
 
         if val == 'B':
-            return 'lightgreen'
+            return 'beige'
 
         if val == 'C':
             return 'orange'
@@ -215,7 +215,7 @@ if page == "Map - Cluster":
             return 'red'
 
         else:
-            return 'black'
+            return 'lightblue'
 
 
     def icon_funct(val):
