@@ -467,7 +467,7 @@ if page == "Analyse Exploratoire":
                 y = df_15_16['energy_grad'].value_counts().index
                 x = df_15_16['energy_grad'].value_counts().values
 
-            colors = {'A+': 'darkgreen', 'A': 'green', 'B': 'yellow', 'C': 'orange', 'D': 'red', 'NC': 'lightblue'}
+            colors = {'A+': 'green', 'A': 'lightgreen', 'B': 'yellow', 'C': 'orange', 'D': 'red', 'NC': 'lightblue'}
             colors = pd.DataFrame(colors, index=[len(y)])
 
             var = colors[y.values]
@@ -493,60 +493,60 @@ if page == "Analyse Exploratoire":
     # Fin Graphique Camambert-------------------------------------------------------------------------------------------------------
 
     # Graphique Donut-------------------------------------------------------------------------------------------------------
-    st.markdown("""<div id=image></div>""", unsafe_allow_html=True)
+        st.markdown("""<div id=image></div>""", unsafe_allow_html=True)
 
-    col41, col42, col43 = st.columns([1 / 3, 10 / 6, 1 / 3])
-    with col42:
-        col_neigh = ['All', 'DOWNTOWN', 'SOUTHEAST', 'NORTHEAST', 'EAST', 'CENTRAL', 'NORTH',
-                     'MAGNOLIA / QUEEN ANNE', 'LAKE UNION', 'GREATER DUWAMISH',
-                     'BALLARD', 'NORTHWEST', 'SOUTHWEST', 'DELRIDGE']
+        col41, col42, col43 = st.columns([1 / 3, 10 / 6, 1 / 3])
+        with col42:
+            col_neigh = ['All', 'DOWNTOWN', 'SOUTHEAST', 'NORTHEAST', 'EAST', 'CENTRAL', 'NORTH',
+                         'MAGNOLIA / QUEEN ANNE', 'LAKE UNION', 'GREATER DUWAMISH',
+                         'BALLARD', 'NORTHWEST', 'SOUTHWEST', 'DELRIDGE']
 
-        categorie_neigh = st.selectbox('Sélectionner le quartier', col_neigh)
+            categorie_neigh = st.selectbox('Sélectionner le quartier', col_neigh)
 
-        fig3, ax = plt.subplots(figsize=(10, 10), subplot_kw=dict(aspect="equal"))
+            fig3, ax = plt.subplots(figsize=(10, 10), subplot_kw=dict(aspect="equal"))
 
-        if categorie_neigh != 'All':
-            y_values = df_15_16['energy_grad'][df_15_16['Neighborhood'] == categorie_neigh].value_counts().index
-            x_values = df_15_16['energy_grad'][df_15_16['Neighborhood'] == categorie_neigh].value_counts().values
-        else:
-            y_values = df_15_16['energy_grad'].value_counts().index
-            x_values = df_15_16['energy_grad'].value_counts().values
+            if categorie_neigh != 'All':
+                y_values = df_15_16['energy_grad'][df_15_16['Neighborhood'] == categorie_neigh].value_counts().index
+                x_values = df_15_16['energy_grad'][df_15_16['Neighborhood'] == categorie_neigh].value_counts().values
+            else:
+                y_values = df_15_16['energy_grad'].value_counts().index
+                x_values = df_15_16['energy_grad'].value_counts().values
 
 
-        labels = y_values
+            labels = y_values
 
-        colors = {'A+': 'darkgreen', 'A': 'green', 'B': 'yellow', 'C': 'orange', 'D': 'red', 'NC': 'lightblue'}
-        colors = pd.DataFrame(colors, index=[len(y_values)])
+            colors = {'A+': 'green', 'A': 'lightgreen', 'B': 'yellow', 'C': 'orange', 'D': 'red', 'NC': 'lightblue'}
+            colors = pd.DataFrame(colors, index=[len(y_values)])
 
-        var = colors[y_values.values]
-        var = var.values.tolist()
-        var = var[0]
+            var = colors[y_values.values]
+            var = var.values.tolist()
+            var = var[0]
 
-        wedges, texts = ax.pie(x_values, wedgeprops=dict(width=0.4), startangle=-40, colors=var)
+            wedges, texts = ax.pie(x_values, wedgeprops=dict(width=0.4), startangle=-40, colors=var)
 
-        bbox_props = dict(boxstyle="square,pad=0.5", fc="w", ec="k", lw=0.72)
+            bbox_props = dict(boxstyle="square,pad=0.5", fc="w", ec="k", lw=0.72)
 
-        kw = dict(arrowprops=dict(arrowstyle="-"),
-                  bbox=bbox_props,
-                  zorder=0, va="center",fontsize=14)
+            kw = dict(arrowprops=dict(arrowstyle="-"),
+                      bbox=bbox_props,
+                      zorder=0, va="center",fontsize=14)
 
-        for i, p in enumerate(wedges):
-            ang = (p.theta2 - p.theta1) / 2 + p.theta1
-            y = np.sin(np.deg2rad(ang))
-            x = np.cos(np.deg2rad(ang))
-            horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
-            connectionstyle = "angle,angleA=0,angleB={}".format(ang)
-            kw["arrowprops"].update({"connectionstyle": connectionstyle}, color="0.1")
-            ax.annotate(y_values[i] + ' : ' + np.round(((x_values[i] / sum(x_values)) * 100), 2).astype(str) + '%',
-                        xy=(x, y), xytext=(1.4 * np.sign(x), 1.4 * y),
-                        horizontalalignment=horizontalalignment, **kw)
+            for i, p in enumerate(wedges):
+                ang = (p.theta2 - p.theta1) / 2 + p.theta1
+                y = np.sin(np.deg2rad(ang))
+                x = np.cos(np.deg2rad(ang))
+                horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+                connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+                kw["arrowprops"].update({"connectionstyle": connectionstyle}, color="0.1")
+                ax.annotate(y_values[i] + ' : ' + np.round(((x_values[i] / sum(x_values)) * 100), 2).astype(str) + '%',
+                            xy=(x, y), xytext=(1.4 * np.sign(x), 1.4 * y),
+                            horizontalalignment=horizontalalignment, **kw)
 
-        ax.set_title("Energie-Grade pour le quartier : "+categorie_neigh, fontsize=16)
+            ax.set_title("Energie-Grade pour le quartier : "+categorie_neigh, fontsize=16)
 
-        #ax.legend(y_values, loc=[1.05,0.3], labels=['%s - %1.2f%%' % (l, s) for l, s in zip(labels, (x_values/sum(x_values))*100)],fontsize=13,facecolor='#fbf8f8')
+            #ax.legend(y_values, loc=[1.05,0.3], labels=['%s - %1.2f%%' % (l, s) for l, s in zip(labels, (x_values/sum(x_values))*100)],fontsize=13,facecolor='#fbf8f8')
 
-        st.pyplot(fig3)
-    # Fin Graphique Dunut-------------------------------------------------------------------------------------------------------
+            st.pyplot(fig3)
+        # Fin Graphique Dunut-------------------------------------------------------------------------------------------------------
 
     #Graphique Boxplot-------------------------------------------------------------------------------------------------------
 
